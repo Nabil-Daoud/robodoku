@@ -5,7 +5,7 @@ import (
 	"fmt"
 	// "path/filepath"
 	//
-	// "robodoku/lib/solver.go"
+	// "github.com/Nabil-Daoud/robodoku/solver"
 	"github.com/Nabil-Daoud/robodoku/sudoku/board"
 )
 
@@ -15,13 +15,15 @@ import (
 // solver.solve()
 
 func main() {
-	var myBoard *board.Board
+	var myBoard board.Board
 	fmt.Println("easy.txt >>>>>>>>>>>>>>")
-	board.PopulateBoard(myBoard, "github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
-	fmt.Println("easy_solution.txt >>>>>>>>>>>>>>")
-	board.PopulateBoard(myBoard, "github.com/Nabil-Daoud/robodoku/puzzles/easy_solution.txt")
-	fmt.Println("two_by_two_trivial.txt >>>>>>>>>>>>>>")
-	board.PopulateBoard(myBoard, "github.com/Nabil-Daoud/robodoku/puzzles/two_by_two_trivial.txt")
-	fmt.Println("medium.txt >>>>>>>>>>>>>>")
-	board.PopulateBoard(myBoard, "github.com/Nabil-Daoud/robodoku/puzzles/medium.txt")
+	myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
+	fmt.Println("Populated, using PrintBoard()")
+	myBoard.PrintBoard()
+	// fmt.Println("easy_solution.txt >>>>>>>>>>>>>>")
+	// myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/easy_solution.txt")
+	// fmt.Println("two_by_two_trivial.txt >>>>>>>>>>>>>>")
+	// myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/two_by_two_trivial.txt")
+	// fmt.Println("medium.txt >>>>>>>>>>>>>>")
+	// myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/medium.txt")
 }
