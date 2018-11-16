@@ -49,3 +49,22 @@ func TestSolveSpot(t *testing.T) {
 		}
 	}
 }
+
+func TestUpdatePossible(t *testing.T) {
+	var tests = []struct {
+		possible [9]bool
+		spot     Spot
+	}{
+		{[9]bool{}, Spot{false, ' ', [9]bool{true, true, true, true, true, true, true, true, true}}},
+		{[9]bool{true}, Spot{false, ' ', [9]bool{true, true, true, true, true, true, true, true, true}}},
+		{[9]bool{false, false, true, true, true}, Spot{false, ' ', [9]bool{true, true, true, true, true, true, true, true, true}}},
+	}
+
+	for _, c := range tests {
+		c.spot.UpdatePossible(c.possible)
+
+		if c.possible != c.spot.Possible {
+			t.Errorf("Did not update possible array correctly.\nwanted: %t\ngot:    %t", c.possible, c.spot.Possible)
+		}
+	}
+}

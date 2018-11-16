@@ -24,6 +24,11 @@ func (spot *Spot) SolveSpot(value uint8) {
 	}
 }
 
+// UpdatePossible updates the array of possibe values the spot can hold.
+func (spot *Spot) UpdatePossible(possible [9]bool) {
+	spot.Possible = possible
+}
+
 // NewSpot is the constructor for a spot
 // func NewSpot(n int, Value uint8) Spot {
 // 	newSpot := Spot{}
