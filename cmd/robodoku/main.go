@@ -16,14 +16,12 @@ import (
 
 func main() {
 	var myBoard board.Board
+
 	fmt.Println("easy.txt >>>>>>>>>>>>>>")
-	myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
+	myBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
 	fmt.Println("Populated, using PrintBoard()")
 	myBoard.PrintBoard()
-	// fmt.Println("easy_solution.txt >>>>>>>>>>>>>>")
-	// myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/easy_solution.txt")
-	// fmt.Println("two_by_two_trivial.txt >>>>>>>>>>>>>>")
-	// myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/two_by_two_trivial.txt")
-	// fmt.Println("medium.txt >>>>>>>>>>>>>>")
-	// myBoard.PopulateBoard("github.com/Nabil-Daoud/robodoku/puzzles/medium.txt")
+
+	myBoard.UpdatePossible()
+
 }

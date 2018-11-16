@@ -5,8 +5,7 @@ import (
 )
 
 func TestPopulateBoard(t *testing.T) {
-	var wantBoard Board
-	var gotBoard Board
+	var wantBoard, gotBoard Board
 
 	// Only hand enter the first three columns and use this line to get
 	// rows 4 through 9 into the board.
@@ -90,9 +89,10 @@ func TestPopulateBoard(t *testing.T) {
 }
 
 func TestUpdatePossibleRow(t *testing.T) {
-	var wantBoard Board
-	var gotBoard Board
-	var didUpdate, didNotUpdate bool
+	var (
+		wantBoard, gotBoard     Board
+		didUpdate, didNotUpdate bool
+	)
 
 	wantBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
 	gotBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
@@ -167,9 +167,10 @@ func TestUpdatePossibleRow(t *testing.T) {
 }
 
 func TestUpdatePossibleCol(t *testing.T) {
-	var wantBoard Board
-	var gotBoard Board
-	var didUpdate, didNotUpdate bool
+	var (
+		wantBoard, gotBoard     Board
+		didUpdate, didNotUpdate bool
+	)
 
 	wantBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
 	gotBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
@@ -269,10 +270,10 @@ func TestSqrHas(t *testing.T) {
 }
 
 func TestUpdatePossibleSqr(t *testing.T) {
-	var wantBoard Board
-	var gotBoard Board
-	var didUpdate, didNotUpdate bool
-
+	var (
+		wantBoard, gotBoard     Board
+		didUpdate, didNotUpdate bool
+	)
 	wantBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
 	gotBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
 
@@ -339,9 +340,10 @@ func TestUpdatePossibleSqr(t *testing.T) {
 }
 
 func TestUpdatePossible(t *testing.T) {
-	var wantBoard Board
-	var gotBoard Board
-	var didUpdate, didNotUpdate bool
+	var (
+		wantBoard, gotBoard     Board
+		didUpdate, didNotUpdate bool
+	)
 
 	wantBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
 	gotBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
@@ -409,19 +411,43 @@ func TestUpdatePossible(t *testing.T) {
 	}
 }
 
-func Test(t *testing.T) {
-	var tests = []struct {
-		value uint8
-		want  int
-	}{
-		{1, 1},
-		{2, 2},
-	}
-	var got int
-	for _, c := range tests {
-		got = int(c.value)
-		if got != c.want {
-			t.Errorf("Cell(%v) == %v, want %v", c.value, got, c.want)
-		}
-	}
+func TestSolveSinglePossible(t *testing.T) {
+	// var wantBoard Board
+	var gotBoard Board
+
+	// wantBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
+	gotBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/puzzles/easy.txt")
+
+	gotBoard.UpdatePossible()
+	gotBoard.SolveSinglePossible()
+
+	// fmt.Println(">>>>>>>>>> Do it again! >>>>>>>>>>>>")
+	gotBoard.UpdatePossible()
+	gotBoard.SolveSinglePossible()
+
+	// fmt.Println(">>>>>>>>>> Do it again! >>>>>>>>>>>>")
+	gotBoard.UpdatePossible()
+	gotBoard.SolveSinglePossible()
+
+	// fmt.Println(">>>>>>>>>> Do it again! >>>>>>>>>>>>")
+	gotBoard.UpdatePossible()
+	gotBoard.SolveSinglePossible()
+
 }
+
+// func Test(t *testing.T) {
+// 	var tests = []struct {
+// 		value uint8
+// 		want  int
+// 	}{
+// 		{1, 1},
+// 		{2, 2},
+// 	}
+// 	var got int
+// 	for _, c := range tests {
+// 		got = int(c.value)
+// 		if got != c.want {
+// 			t.Errorf("Cell(%v) == %v, want %v", c.value, got, c.want)
+// 		}
+// 	}
+// }

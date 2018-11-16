@@ -91,13 +91,10 @@ func (board *Board) PrintBoard() {
 // UpdatePossible takes the board and updates the possible values based on rows,
 // columns, and squares. It returns true if a possible square was updated.
 func (board *Board) UpdatePossible() bool {
-	return board.updatePossibleRow() || board.updatePossibleCol() || board.updatePossibleSqr()
-	// return board.updatePossibleCol() || board.updatePossibleSqr()
-
-	// updated := board.updatePossibleRow()
-	// updated = updated || board.updatePossibleCol()
-	// updated = updated || board.updatePossibleSqr()
-	// return updated
+	updatedRow := board.updatePossibleRow()
+	updatedCol := board.updatePossibleCol()
+	updatedSqr := board.updatePossibleSqr()
+	return updatedRow || updatedCol || updatedSqr
 }
 
 // updatePossibleRow() loops through the rows and updates the Possible array
@@ -106,7 +103,7 @@ func (board *Board) updatePossibleRow() bool {
 	updated := false
 
 	// Loop through the rows
-	for i, row := range board.Spots { // i
+	for i, row := range board.Spots {
 		// Loop through the spots in the row to populate the values the row has
 		rowHas := [9]bool{} // false, false, false, false, false, false, false, false, false}
 		var updatedPossible [9]bool
@@ -140,6 +137,7 @@ func (board *Board) updatePossibleRow() bool {
 // based on solved spots in the same column.
 func (board *Board) updatePossibleCol() bool {
 	updated := false
+
 	// Loop through the columns
 	for i := range board.Spots {
 		// Loop through the spots in the column to populate the values the column has
@@ -217,4 +215,22 @@ func (board *Board) getSqrHas(sqrRowIndex, sqrColIndex int) [9]bool {
 		}
 	}
 	return sqrHas
+}
+
+// SolveSinglePossible looks for and solves unsolved spots
+// that have a single possible value
+func (board *Board) SolveSinglePossible() {
+	for rowIndex, row := range board.Spots {
+		for colIndex, spot := range row {
+			if !spot.Solved {
+				hasSinglePossible, value := spot.SinglePossible()
+				if hasSinglePossible {
+					// fmt.Println("On board: ")
+					// board.PrintBoard()
+					// fmt.Printf("Spot(%v, %v) can only be %v.\n\n", rowIndex, colIndex, value)
+					board.Spots[rowIndex][colIndex].SolveSpot(uint8(value))
+				}
+			}
+		}
+	}
 }

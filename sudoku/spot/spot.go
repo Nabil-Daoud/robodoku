@@ -29,15 +29,24 @@ func (spot *Spot) UpdatePossible(possible [9]bool) {
 	spot.Possible = possible
 }
 
-// NewSpot is the constructor for a spot
-// func NewSpot(n int, Value uint8) Spot {
-// 	newSpot := Spot{}
-// 	newSpot.Value = Value
-// 	if Value == ' ' {
-// 		newSpot.Possible = []bool{true}
-// 	} else {
-// 		newSpot.Possible = []bool{false}
-// 		newSpot.Possible[int(Value)-1] = true
-// 	}
-// 	return newSpot
-// }
+// SinglePossible returns true and the value of the single possible value if the
+// spot has only one possible value, else false and 0
+func (spot Spot) SinglePossible() (bool, int) {
+	var (
+		numPossible int
+		value       int
+	)
+
+	for i, possible := range spot.Possible {
+		if possible {
+			numPossible++
+			value = i + 1
+		}
+	}
+
+	if numPossible == 1 {
+		return true, value
+	}
+
+	return false, 0
+}
