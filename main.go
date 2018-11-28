@@ -6,9 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	// "path/filepath"
-	//
-	// "github.com/Nabil-Daoud/robodoku/solver"
-	// "github.com/Nabil-Daoud/robodoku/sudoku"
 	"github.com/Nabil-Daoud/robodoku/solver"
 	"github.com/Nabil-Daoud/robodoku/sudoku/board"
 )
@@ -20,17 +17,15 @@ import (
 
 func main() {
 	var myBoard board.Board
+	dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
+	myBoard = board.Build(dat)
 
-	// fmt.Println("easy.txt >>>>>>>>>>>>>>")
-	// dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
-	// fmt.Printf("\ndat is of type %T\n", dat)
-	// fmt.Printf("%v\n", len(dat))
-	myBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/medium1.txt")
 	myBoard.PrintBoard()
 
 	fmt.Println()
 
 	solvedBoard := solver.Phase1(myBoard)
+	fmt.Println("Board after Phase1:")
 	solvedBoard.PrintBoard()
 
 	// fmt.Println("four_by_four.txt >>>>>>>>>>>>>>")
@@ -44,14 +39,10 @@ func main() {
 	// fmt.Printf("%v\n", len(dat))
 }
 
-// ReadFile takes a board from a file and returns it as an array of bytes.
+// ReadFile takes a board from a file and returns it as an array of uint8.
 func ReadFile(filename string) []uint8 {
 	dat, err := ioutil.ReadFile(filename)
 	check(err)
-
-	// fmt.Printf("dat is of type %T\n", dat)
-	// fmt.Printf("%v\n", dat)
-
 	return dat
 }
 
