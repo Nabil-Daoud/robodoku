@@ -25,7 +25,7 @@ func main() {
 	// dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
 	// fmt.Printf("\ndat is of type %T\n", dat)
 	// fmt.Printf("%v\n", len(dat))
-	myBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/medium1.txt")
+	myBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
 	myBoard.PrintBoard()
 
 	fmt.Println()

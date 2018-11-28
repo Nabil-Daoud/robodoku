@@ -8,7 +8,10 @@ var myBoard board.Board
 
 // Phase1 solves unsolved spots that have only one possible value
 func Phase1(board board.Board) board.Board {
+	// var count int
 	for board.UpdatePossible() {
+		// count++
+		// fmt.Printf("Lap count: %v\n", count)
 		board.SolveSinglePossible()
 	}
 	return board
