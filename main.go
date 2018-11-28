@@ -1,13 +1,13 @@
 package main
 
 import (
-	// "os"
-
 	"fmt"
 	"io/ioutil"
-	// "path/filepath"
+	"os"
+
 	"github.com/Nabil-Daoud/robodoku/solver"
 	"github.com/Nabil-Daoud/robodoku/sudoku/board"
+	"github.com/gocraft/health"
 )
 
 // puzzle_path = ARGV[0]
@@ -15,7 +15,30 @@ import (
 // solver = Solver.new(puzzle_text)
 // solver.solve()
 
+var stream = health.NewStream()
+
 func main() {
+	var err error
+	var currentDir string
+	// Log to stdout (can also use WriteSink to write to a log file, Syslog, etc.)
+	stream.AddSink(&health.WriterSink{os.Stdout})
+
+	// Logging and instrumentation happens within the context of a job.
+	job := stream.NewJob("Robodoku Setup")
+	currentDir, err = os.Getwd()
+
+	if err != nil {
+		job.EventErr("os.Getwd", err)
+	}
+
+	if err == nil {
+		job.Complete(health.Success)
+	} else {
+		job.Complete(health.Error)
+	}
+
+	fmt.Printf("The current directory is %s", currentDir)
+
 	var myBoard board.Board
 	dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
 	myBoard = board.Build(dat)
