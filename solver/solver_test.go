@@ -2,6 +2,8 @@ package solver
 
 import (
 	"testing"
+
+	"github.com/Nabil-Daoud/robodoku/sudoku/board"
 )
 
 func Test(t *testing.T) {
@@ -12,6 +14,10 @@ func Test(t *testing.T) {
 		{1, 1},
 		{2, 2},
 	}
+
+	var board board.Board
+	Phase1(board)
+
 	var got int
 	for _, c := range tests {
 		got = int(c.value)

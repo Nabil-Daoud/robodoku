@@ -9,7 +9,7 @@ import (
 
 // Board is a structure that holds an N x N Sudoku board.
 type Board struct {
-	N     int
+	// N     int
 	Spots [9][9]spot.Spot
 }
 
@@ -19,34 +19,11 @@ func check(e error) {
 	}
 }
 
-// PopulateBoard takes a filename and populates the Spots
-func (board *Board) PopulateBoard(filename string) {
-	dat, err := ioutil.ReadFile(filename)
-	check(err)
-
-	// fmt.Printf("The data is read in as a %T and is of length %v\n", dat, len(dat))
-	// lines := []string{strings.Split(string(dat), "\n")}
-
-	// The code bewlow can be used to determine the dimensions of the board.
-	// for i := 0; i < len(dat); i++ {
-	// 	fmt.Printf("i: %v\n", i)
-	// 	if dat[i] == 10 {
-	// 		fmt.Println(">>>> In the if block.")
-	// 		board.N = i
-	// 		fmt.Printf("Board size, N set to %v\n", i)
-	// 		fmt.Printf("N = %v\n", i)
-	// 		break
-	// 	}
-	// 	fmt.Println("Loop.")
-	// }
-	// fmt.Println("<<<< made it out of the for loop. phew")
-	// fmt.Println("the board is ", board.N, " by ", string(board.N), ".")
-
+// Populate takes a slice of uint8 and populates the Spots on the bBoard
+func (board *Board) Populate(dat []uint8) {
 	for i, item := range dat {
-		// fmt.Print(string(item))
-		// fmt.Print(" | ", i, ": ", string(item))
 		if item != uint8(10) {
-			// if it's not a blank, solve it; otherwise set all possible to true.
+			// if it's not a blank, solve it; else set all possible to true.
 			if item != uint8(32) {
 				board.Spots[i/10][i%10].SolveSpot(item - 48)
 			} else {
@@ -54,17 +31,23 @@ func (board *Board) PopulateBoard(filename string) {
 			}
 		}
 	}
+}
 
-	// fmt.Println("\n<<<<<<<<<<<<<<<< length of dat = ", len(dat))
-	// fmt.Println("")
-	// for _, thing := range dat {
-	// 	fmt.Print(thing, " . ")
-	// 	if thing == 10 {
-	// 		fmt.Println("")
-	// 	}
-	// }
-	// fmt.Println("")
+// PopulateBoard takes a filename and populates the Spots
+func (board *Board) PopulateBoard(filename string) {
+	dat, err := ioutil.ReadFile(filename)
+	check(err)
 
+	for i, item := range dat {
+		if item != uint8(10) {
+			// if it's not a blank, solve it; else set all possible to true.
+			if item != uint8(32) {
+				board.Spots[i/10][i%10].SolveSpot(item - 48)
+			} else {
+				board.Spots[i/10][i%10].Possible = [9]bool{true, true, true, true, true, true, true, true, true}
+			}
+		}
+	}
 }
 
 // PrintBoard prints the solved values on the Sodoku board.
@@ -91,10 +74,10 @@ func (board *Board) PrintBoard() {
 // UpdatePossible takes the board and updates the possible values based on rows,
 // columns, and squares. It returns true if a possible square was updated.
 func (board *Board) UpdatePossible() bool {
-	updatedRow := board.updatePossibleRow()
-	updatedCol := board.updatePossibleCol()
-	updatedSqr := board.updatePossibleSqr()
-	return updatedRow || updatedCol || updatedSqr
+	didUpdateRow := board.updatePossibleRow()
+	didUpdateCol := board.updatePossibleCol()
+	didUpdateSqr := board.updatePossibleSqr()
+	return didUpdateRow || didUpdateCol || didUpdateSqr
 }
 
 // updatePossibleRow() loops through the rows and updates the Possible array
@@ -103,34 +86,39 @@ func (board *Board) updatePossibleRow() bool {
 	updated := false
 
 	// Loop through the rows
-	for i, row := range board.Spots {
-		// Loop through the spots in the row to populate the values the row has
-		rowHas := [9]bool{} // false, false, false, false, false, false, false, false, false}
+	for rowIndex, row := range board.Spots {
+		rowHas := board.getRowHas(row)
 		var updatedPossible [9]bool
-
-		for _, spot := range row {
-			if spot.Solved {
-				rowHas[spot.Value-1] = true
-			}
-		}
 
 		// Loop through the spots in the row again and update the possible values
 		// based on what the row has.
-		for j, spot := range row { // k
+		for colIndex, spot := range row {
 			if !spot.Solved {
 				updatedPossible = spot.Possible
 
-				for k, possible := range spot.Possible {
-					if possible && rowHas[k] {
-						updatedPossible[k] = false
+				for valueIndex, possible := range spot.Possible {
+					if possible && rowHas[valueIndex] {
+						updatedPossible[valueIndex] = false
 						updated = true
 					}
 				}
-				board.Spots[i][j].UpdatePossible(updatedPossible)
+				board.Spots[rowIndex][colIndex].UpdatePossible(updatedPossible)
 			}
 		}
 	}
 	return updated
+}
+
+func (board Board) getRowHas(row [9]spot.Spot) [9]bool {
+	rowHas := [9]bool{}
+	// Loop through the spots in the row to populate the values the row has
+	for _, spot := range row {
+		if spot.Solved {
+			rowHas[spot.Value-1] = true
+		}
+	}
+
+	return rowHas
 }
 
 // updatePossibleCol() loops through the columns and updates the Possible array
@@ -138,34 +126,41 @@ func (board *Board) updatePossibleRow() bool {
 func (board *Board) updatePossibleCol() bool {
 	updated := false
 
-	// Loop through the columns
-	for i := range board.Spots {
+	// Loop through the columns, i
+	for colIndex := range board.Spots {
 		// Loop through the spots in the column to populate the values the column has
-		colHas := [9]bool{}
+		colHas := board.getColHas(colIndex)
 		var updatedPossible [9]bool
 
-		for j := range board.Spots {
-			if board.Spots[j][i].Solved {
-				colHas[board.Spots[j][i].Value-1] = true
-			}
-		}
 		// Loop through the spots in the column again and update their possible
 		// values based on what the column has.
-		for j := range board.Spots {
-			if !board.Spots[j][i].Solved {
-				updatedPossible = board.Spots[j][i].Possible
+		for rowIndex := range board.Spots {
+			if !board.Spots[rowIndex][colIndex].Solved {
+				updatedPossible = board.Spots[rowIndex][colIndex].Possible
 
-				for k, possible := range board.Spots[j][i].Possible {
-					if possible && colHas[k] {
-						updatedPossible[k] = false
+				for valueIndex, possible := range board.Spots[rowIndex][colIndex].Possible {
+					if possible && colHas[valueIndex] {
+						updatedPossible[valueIndex] = false
 						updated = true
 					}
-					board.Spots[j][i].UpdatePossible(updatedPossible)
+					board.Spots[rowIndex][colIndex].UpdatePossible(updatedPossible)
 				}
 			}
 		}
 	}
 	return updated
+}
+
+func (board Board) getColHas(colIndex int) [9]bool {
+	colHas := [9]bool{}
+
+	for rowIndex := range board.Spots {
+		if board.Spots[rowIndex][colIndex].Solved {
+			colHas[board.Spots[rowIndex][colIndex].Value-1] = true
+		}
+	}
+
+	return colHas
 }
 
 // updatePossibleSqr() loops through the squares and updates the Possible array
@@ -188,9 +183,9 @@ func (board *Board) updatePossibleSqr() bool {
 					if !board.Spots[spotRow][spotCol].Solved {
 						updatedPossible = board.Spots[spotRow][spotCol].Possible
 
-						for k, possible := range board.Spots[spotRow][spotCol].Possible {
-							if possible && sqrHas[k] {
-								updatedPossible[k] = false
+						for valueIndex, possible := range board.Spots[spotRow][spotCol].Possible {
+							if possible && sqrHas[valueIndex] {
+								updatedPossible[valueIndex] = false
 								updated = true
 							}
 							board.Spots[spotRow][spotCol].UpdatePossible(updatedPossible)
@@ -227,7 +222,7 @@ func (board *Board) SolveSinglePossible() {
 				if hasSinglePossible {
 					// fmt.Println("On board: ")
 					// board.PrintBoard()
-					// fmt.Printf("Spot(%v, %v) can only be %v.\n\n", rowIndex, colIndex, value)
+					fmt.Printf("Spot(%v, %v) can only be %v.\n\n", rowIndex, colIndex, value)
 					board.Spots[rowIndex][colIndex].SolveSpot(uint8(value))
 				}
 			}
