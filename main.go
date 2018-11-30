@@ -37,11 +37,11 @@ func main() {
 		job.Complete(health.Error)
 	}
 
-	fmt.Printf("The current directory is %s", currentDir)
+	fmt.Printf("The current directory is %s\n", currentDir)
 
 	var myBoard board.Board
-	dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
-	myBoard = board.Build(dat)
+	dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/medium1.txt")
+	myBoard, err = board.Build(dat)
 
 	myBoard.PrintBoard()
 
@@ -49,6 +49,14 @@ func main() {
 
 	solvedBoard := solver.Phase1(myBoard)
 	fmt.Println("Board after Phase1:")
+	solvedBoard.PrintBoard()
+
+	solvedBoard = solver.Phase2(solvedBoard)
+	fmt.Println("\nBoard after Phase2:")
+	solvedBoard.PrintBoard()
+
+	solvedBoard = solver.Phase1(solvedBoard)
+	fmt.Println("\nBoard after Phase1 again:")
 	solvedBoard.PrintBoard()
 
 	// fmt.Println("four_by_four.txt >>>>>>>>>>>>>>")
