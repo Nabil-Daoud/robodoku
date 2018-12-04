@@ -111,15 +111,6 @@ func Phase1(board board.Board) (board.Board, bool) {
 	return board, didChange
 }
 
-<<<<<<< HEAD
-// Phase1 solves unsolved spots that have only one possible value
-func Phase1(board board.Board) board.Board {
-	// var count int
-	for board.UpdatePossible() {
-		// count++
-		// fmt.Printf("Lap count: %v\n", count)
-		board.SolveSinglePossible()
-=======
 func onlyPossibleInRow(rowIndex int, board board.Board) (isThere bool, value uint8, colIndex int) {
 	var numCandidate int
 
@@ -144,7 +135,6 @@ func onlyPossibleInRow(rowIndex int, board board.Board) (isThere bool, value uin
 			}
 			numCandidate = 0
 		}
->>>>>>> functional
 	}
 	return false, 0, 0
 }

@@ -19,34 +19,7 @@ var filename *string
 var filenameSetByUser bool
 
 func main() {
-<<<<<<< HEAD
-	var myBoard board.Board
-
-	// fmt.Println("easy.txt >>>>>>>>>>>>>>")
-	// dat := ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
-	// fmt.Printf("\ndat is of type %T\n", dat)
-	// fmt.Printf("%v\n", len(dat))
-	myBoard.PopulateBoard("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/easy.txt")
-	myBoard.PrintBoard()
-
-	fmt.Println()
-
-	solvedBoard := solver.Phase1(myBoard)
-	solvedBoard.PrintBoard()
-
-	// fmt.Println("four_by_four.txt >>>>>>>>>>>>>>")
-	// dat = sudoku.ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/four_by_four_trivial.txt")
-	// fmt.Printf("%v\n", len(dat))
-	// fmt.Println("two_by_two.txt >>>>>>>>>>>>>>")
-	// dat = sudoku.ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/two_by_two_trivial.txt")
-	// fmt.Printf("%v\n", len(dat))
-	// fmt.Println("medium.txt >>>>>>>>>>>>>>")
-	// dat = sudoku.ReadFile("/Users/nabil/go/src/github.com/Nabil-Daoud/robodoku/testdata/medium.txt")
-	// fmt.Printf("%v\n", len(dat))
-}
-=======
 	var err error
->>>>>>> functional
 
 	// Log to stdout (can also use WriteSink to write to a log file, Syslog, etc.)
 	stream.AddSink(&health.WriterSink{os.Stdout})
