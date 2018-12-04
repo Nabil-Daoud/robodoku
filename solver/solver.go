@@ -100,16 +100,15 @@ func solveSinglePossible(board board.Board) (bool, board.Board) {
 
 // Phase1 solves unsolved spots that have only one possible value based on
 // other values in its row, column, and square
-func Phase1(board board.Board) board.Board {
-	var didSolve, done bool
-	// count := 0
+func Phase1(board board.Board) (board.Board, bool) {
+	var didChange, didSolve, done bool
+
 	for !done {
-		// count++
-		// fmt.Printf("Lap count: %v\n", count)
 		didSolve, board = solveSinglePossible(board)
 		done = !didSolve
+		didChange = didChange || didSolve
 	}
-	return board
+	return board, didChange
 }
 
 func onlyPossibleInRow(rowIndex int, board board.Board) (isThere bool, value uint8, colIndex int) {
@@ -191,10 +190,6 @@ func solveOnlyPossibleCol(board board.Board) (bool, board.Board) {
 	for colIndex := range board.Spots {
 		isThere, value, rowIndex := onlyPossibleInCol(colIndex, board)
 		if isThere {
-			// fmt.Println("On board:")
-			// board.PrintBoard()
-			// fmt.Printf("Spot[%v][%v] is only in column that can be %v\n\n", rowIndex, colIndex, value)
-
 			didSolve = true
 			board.Spots[rowIndex][colIndex] = value
 		}
@@ -217,18 +212,13 @@ func onlyPossibleInSqr(sqrRowIndex int, sqrColIndex int, board board.Board) (isT
 
 	// loop through all the values
 	for i, hasValue := range getSqrHas(board, sqrRowIndex*squareLength, sqrColIndex*squareLength) {
-		// fmt.Printf("Checking value %v\n", i+1)
-
 		// if the square is missing a value
 		if !hasValue {
-			// fmt.Printf("The [%v],[%v] square does not have %v\n", sqrRowIndex, sqrColIndex, i+1)
 			// loop through the spots in the square
 			for j := 0; j < squareLength; j++ {
 				for k := 0; k < squareLength; k++ {
 					// if the spot can be the value from the first loop
 					if spotPossible(sqrRowIndex*squareLength+j, sqrColIndex*squareLength+k, board)[i] {
-						// fmt.Printf("Spot at [%v][%v] can be %v\n", sqrRowIndex*squareLength+j, sqrColIndex*squareLength+k, i+1)
-
 						// increment the number of candidates
 						numCandidate++
 						value = uint8(i + 1)
@@ -263,10 +253,6 @@ func solveOnlyPossibleSqr(board board.Board) (bool, board.Board) {
 		for sqrColIndex := 0; sqrColIndex < numSquares; sqrColIndex++ {
 			isThere, value, rowIndex, colIndex := onlyPossibleInSqr(sqrRowIndex, sqrColIndex, board)
 			if isThere {
-				// fmt.Println("On board:")
-				// board.PrintBoard()
-				// fmt.Printf("Spot[%v][%v] is only in square that can be %v\n\n", rowIndex, colIndex, value)
-
 				didSolve = true
 				board.Spots[rowIndex][colIndex] = value
 			}
@@ -285,33 +271,17 @@ func solveOnlyPossible(board board.Board) (didSolve bool, solvedBoard board.Boar
 	didSolveSqr, solvedBoard = solveOnlyPossibleSqr(solvedBoard)
 
 	didSolve = didSolveRow || didSolveCol || didSolveSqr
-	// fmt.Println("solveOnlyPossible got one!")
 	return
-
-	// for rowIndex, row := range board.Spots {
-	// 	for colIndex, value := range row {
-	// 		if value == uint8(0) { // if unsolved
-	// 			hasSinglePossible, val := singlePossible(rowIndex, colIndex, board)
-	// 			if hasSinglePossible {
-	// 				didSolve = true
-	// 				board.Spots[rowIndex][colIndex] = val
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 }
 
 // Phase2 goes through the rows, columns and squares (peer groups) and solve
 // if a spot is the only one of its peers that can be a given value
-func Phase2(board board.Board) board.Board {
-	var didSolve, done bool
-	// count := 0
+func Phase2(board board.Board) (board.Board, bool) {
+	var didChange, didSolve, done bool
 	for !done {
-		// count++
-		// fmt.Printf("Lap count: %v\n", count)
 		didSolve, board = solveOnlyPossible(board)
 		done = !didSolve
+		didChange = didChange || didSolve
 	}
-	return board
+	return board, didChange
 }

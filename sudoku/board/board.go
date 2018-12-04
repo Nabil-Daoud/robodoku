@@ -61,7 +61,7 @@ func populate(n int, dat []uint8, board Board) Board {
 }
 
 // PrintBoard prints the solved values on the Sodoku board.
-// TODO: Make this function return a string for any size board
+// TODO: Make this function return a string AND work for any size board
 func (board *Board) PrintBoard() {
 	for i, row := range board.Spots {
 		for j, spot := range row {
